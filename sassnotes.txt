@@ -1,0 +1,181 @@
+resoures we can use:(responsive)
+//clicp maker
+https://bennettfeely.com/clippy/
+and
+http://www.cssplant.com/clip-path-generator
+
+//for colors
+http://uicolorpicker.com/
+//for lightn weight images
+https://undraw.co/search
+//for normalize .css,it wl get rid of browser defaults
+https://necolas.github.io/normalize.css/8.0.1/normalize.css
+
+
+
+Variables:
++++++++++
+
+	Sass variables are simple: you assign a value to a name that begins with $, and then you can refer to that name instead of the value itself. But despite their simplicity, they're one of the most useful tools Sass brings to the table. Variables make it possible to redu ce repetition, do complex math, configure libraries, and much more.
+  ex: $color-primary:blue;
+	body{
+background-color:$color-primary;}
+
+map-get:
+======
+uaually used for  colors and fonts;
+example:	$colors:(
+    primary:#4BA0ED,
+    accent:#67E6DC,
+    font:#fff
+);
+
+body{
+    background-color:map-get($map:$colors,$key:primary);
+    color:map-get($map: $colors, $key:font);
+or
+   color:map-get($colors,font); //short hand code also work
+}
+
+functions:
+======
+	if some one is creating $colors like variables,just bellow that there is a function,being return for for special customization of that key value pair, or that map get thing.
+note:we use @symbol before functions,retrun,any thing we we including and before mixins
+  	ex:
+		$colors:(
+    primary:#4BA0ED,
+    accent:#67E6DC,
+    font:#fff
+);
+@function color($colorName){
+    @return map-get($map:$colors ,$key :$colorName )
+}
+ $sizes:(
+     fontone:20px,
+     fontTwo:30px,
+     fontzero:10px
+ );
+ @function font($size){
+     @return map-get($map: $sizes,$key :$size )
+ }
+body{
+    // using function we r assigning
+    background-color:color(primary);
+//usnin functions we r assing
+    font-size:font(fontone);
+}
+
+Nesting:
+=========:intendations can be done here.this is good when we want to target to one block in just one go
+
+		ex:
+		//nesting
+main{
+    height: 100px;
+    p{
+        color: #C0F1FF;
+    }
+    a{
+        text-decoration: none;
+    }
+}
+
+
+Partials:
+======
+	Using sass we can all css into multiple file,like all mixins in one file ,functions in one file, variables in one file,About Section in one file, we can to good stuff with that.
+
+mixins: modularity starts here
+=====
+	Mixins file name should be.
+ 	_mixins.scss(_is important other wise our file will compile in to css ots not gonna work)
+
+        ex:_mixins.scss
+	======
+				@mixin coverimage($location){
+    				background-image: 
+    					linear-gradient(
+        						to top,
+      						  rgba(0,45,75,0),
+      						  rgba(0,0,0,0.4)
+ 						   ),
+    					url($location);//this image url location we get it from user 
+        					background-size: cover;
+    					background-repeat: no-repeat;
+   					 background-position: center center;
+					}
+
+	//HOW TO USE MIXINS IN OUR SCSS
+	ABOUT.SCSS
+	--------------
+	//-------importing mixin
+		@import "mixins";//'_'is not required here
+		html{	
+			height: 100vh;//view port height
+		//_____we all the down stuff in mixins ------------------
+
+   			 //     background-image: url('images/cover.jpg');//this images should be ralative to about.html not relative to ssasss file
+			// background-size: cover;
+			// background-repeat: no-repeat;
+			// background-position: center center;
+
+		//-----calling mixins
+			@include coverimage('images/cover2.jpg');
+
+		}
+	body{
+	   h1{
+      		 color:#F5F510;
+      		 text-align: center;
+     		  margin-top: 5%;
+    		   font-size: 3rem;
+
+  		 } 
+	   p{
+     	  color: #EADEDE;
+     	  text-align:center;
+     	  font-size: 2rem; 
+   	}
+          }
+	.container{
+    	text-align: center;
+	}
+
+ EXTENDS:
+=======
+         GIVES USERS FLEXIBILITY TO USE MIXINS
+IF .HTML:
+======
+	<div class="container">
+        <button class="btn-youtube"> YouTube</button>
+  <!-- we can customize out bootstrap call inthis way -->
+        <button class="btn-courses">Courses</button>
+    </div>
+   eX:_BTN.SCSS
+------------------
+		%btn{
+ 	   display: inline-block;	
+	padding: 5px 25px;
+   	 text-align: center;
+   	 border-radius: 4px;
+   	 color:#fff;	
+	font-size: 20px;
+    	background-color: #ED96A6;
+
+	}
+about.scss:
+======
+//import mixins
+@import'btn';
+//How to use _btn
+//extending or inheritance
+.btn-youtube{
+    // we use % symbor for generalized class
+    @extend %btn;
+    background-color: red;
+
+}
+.btn-courses{
+    @extend %btn;
+    background-color: #084A08;
+}
